@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <title>Conway's Game of Life</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #222;
+        }
+
+        canvas {
+            border: 1px solid #aaa;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game"></canvas>
+
+    <script>
+        // Set canvas and world configuration
+        const game = document.getElementById('game');
+        const ctx = game.getContext('2d');
+
+        const resolution = 5; // Cell size
+        game.height = 600;
+        game.width = 600;
+
+        const ROWS = game.height / resolution;
+        const COLS = game.width / resolution;
+
+        // Create the world
+        function createWorld() {
+            return new Array(COLS).fill(null)
+                .map(() => new Array(ROWS).fill(null)
+                    .map(() => Math.floor(Math.random() * 2)));
+        }
+
+        // Draw the world
+        function draw(world) {
+            for (let col = 0; col < world.length; col++) {
+                for (let row = 0; row < world[col].length; row++) {
+                    const cell = world[col][row];
+                    ctx.beginPath();
+                    ctx.rect(col * resolution, row * resolution, resolution, resolution);
+                    ctx.fillStyle = cell ? '#00FF00' : '#222'; // Alive (green) or dead (dark background)
+                    ctx.fill();
+                    ctx.strokeStyle = '#333'; // world lines
+                    ctx.stroke();
+                }
+            }
+        }
+
+        // Update world based on the rules of the Game of Life
+        function nextGen(world) {
+            const newWorld = world.map(arr => [...arr]);
+
+            for (let col = 0; col < world.length; col++) {
+                for (let row = 0; row < world[col].length; row++) {
+                    const cell = world[col][row];
+                    let liveNeighbors = 0;
+
+                    // Count neighbors
+                    for (let i = -1; i < 2; i++) {
+                        for (let j = -1; j < 2; j++) {
+                            if (i === 0 && j === 0) {
+                                continue; // Skip self
+                            }
+                            const x = col + i;
+                            const y = row + j;
+
+                            // Ensure the live neighbors are within the bounds of the world
+                            if (x >= 0 && x < COLS && y >= 0 && y < ROWS) {
+                                liveNeighbors += world[x][y];
+                            }
+                        }
+                    }
+
+                    // Conway's Game of Life rules
+                    if (cell === 1 && (liveNeighbors < 2 || liveNeighbors > 3)) {
+                        newWorld[col][row] = 0; // Cell dies
+                    } else if (cell === 0 && liveNeighbors === 3) {
+                        newWorld[col][row] = 1; // Cell becomes alive
+                    } else if(cell === 1 && (liveNeighbors == 2 || liveNeighbors == 3)){
+                        newWorld[col][row] = 1;// Cell becomes alive
+                    }
+                }
+            }
+
+            return newWorld;
+        }
+
+        const delay = (delayInms) => {
+            return new Promise(resolve => setTimeout(resolve, delayInms));
+          };
+
+        // Main loop to run the game
+        let world = createWorld();
+        async function update() {
+            world = nextGen(world);
+            draw(world);
+
+            await delay(100);
+            requestAnimationFrame(update); // Recursively call update to animate the game
+        }
+
+        // Start the game
+        requestAnimationFrame(update);
+
+    </script>
+</body>
+
+</html>
