@@ -25,3 +25,6 @@ The repository contains the following implementations:
    - **File:** `index.html`  
    - **Description:** A web-based implementation using HTML and JavaScript to render the game in a web browser.
 
+---
+<img src="https://github.com/Ali-Kazzazi/game_of_life/blob/master/curses.PNG"></a>
+<img src="https://github.com/Ali-Kazzazi/game_of_life/blob/master/matplot.PNG"></a>
