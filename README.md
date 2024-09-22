@@ -28,3 +28,4 @@ The repository contains the following implementations:
 ---
 <img src="https://github.com/Ali-Kazzazi/game_of_life/blob/master/curses.PNG"></a>
 <img src="https://github.com/Ali-Kazzazi/game_of_life/blob/master/matplot.PNG"></a>
+<img src="https://github.com/Ali-Kazzazi/game_of_life/blob/master/web_.PNG"></a>
